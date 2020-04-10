@@ -1,0 +1,18 @@
+<!DOCTYPE HarnessConfig [
+    <!ELEMENT HarnessConfig (Configuration,TestSuite)>
+    <!ELEMENT Configuration (maxInvalidAttempts,timeBetweenRetries,sleepTime,sessionTimeout,concurrentConnections)>
+    <!ELEMENT maxInvalidAttempts (#PCDATA)>
+    <!ELEMENT timeBetweenRetries (#PCDATA)>
+    <!ELEMENT sleepTime (#PCDATA)>
+    <!ELEMENT sessionTimeout (#PCDATA)>
+    <!ELEMENT concurrentConnections (#PCDATA)>
+
+    <!ELEMENT TestSuite (TestCase)+>
+    <!ATTLIST TestSuite name CDATA #REQUIRED>
+    <!ELEMENT TestCase (Name,Operation,Method,ErrorResponse,StatusCode)*>
+    <!ELEMENT Name (#PCDATA)>
+    <!ELEMENT Operation (#PCDATA)>
+    <!ELEMENT Method (#PCDATA)>
+    <!ELEMENT ErrorResponse (#PCDATA)>
+    <!ELEMENT StatusCode (#PCDATA)>
+]>
