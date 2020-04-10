@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions name="ExternalConnector" targetNamespace="http://www.phlexeview.com/" 
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+                  xmlns:tns="http://www.phlexeview.com/" 
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" 
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsp:Policy wsu:Id="BasicHttpBinding_IExternalConnector_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsoma:OptimizedMimeSerialization xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"/>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.phlexeview.com/">
+      <xsd:element name="LoginUser">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="userName" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="password" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ipAddress" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="LoginUserResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="LoginUserResult" type="tns:SecurityResult"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="SecurityResult">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="token" nillable="true" type="xsd:string">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/"/>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="statusCode" type="tns:StatusCode"/>
+          <xsd:element name="errorReason" type="tns:ErrorReason"/>
+          <xsd:element minOccurs="0" name="errorData" nillable="true" type="xsd:string">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/"/>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="SecurityResult" nillable="true" type="tns:SecurityResult"/>
+      <xsd:simpleType name="StatusCode">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="SUCCESS">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">0</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="WAIT">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="STOP_THREAD">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="RETRY">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="RETRY_LOGIN">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">6</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="DO_NOT_RETRY">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">8</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CRITICAL">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">16</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="StatusCode" nillable="true" type="tns:StatusCode"/>
+      <xsd:simpleType name="ErrorReason">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NONE"/>
+          <xsd:enumeration value="USER_PASS_MISMATCH"/>
+          <xsd:enumeration value="TOKEN_INVALID"/>
+          <xsd:enumeration value="ACCOUNT_LOCKED"/>
+          <xsd:enumeration value="ACCOUNT_DISABLED"/>
+          <xsd:enumeration value="IP_MISMATCH"/>
+          <xsd:enumeration value="RETRY_COUNT_EXCEEDED"/>
+          <xsd:enumeration value="UNSUPPORTED_FORMAT"/>
+          <xsd:enumeration value="PORTFOLIO_PDF_UNSUPPORTED"/>
+          <xsd:enumeration value="PAGE_COUNT_ERROR"/>
+          <xsd:enumeration value="FORMAT_EXCEPTION"/>
+          <xsd:enumeration value="MAX_SIZE_EXCEEDED"/>
+          <xsd:enumeration value="DOCUMENT_DOES_NOT_EXIST"/>
+          <xsd:enumeration value="RESTORE_POINT_OPEN"/>
+          <xsd:enumeration value="DATABASE_ERROR"/>
+          <xsd:enumeration value="GENERAL_FAILURE"/>
+          <xsd:enumeration value="DATE_FORMAT_INVALID"/>
+          <xsd:enumeration value="NUMBER_FORMAT_INVALID"/>
+          <xsd:enumeration value="VALUE_TOO_LARGE"/>
+          <xsd:enumeration value="FIELD_TYPE_MISMATCH"/>
+          <xsd:enumeration value="MANDATORY_FIELD_MISSING"/>
+          <xsd:enumeration value="MISSING_FILE_FORMAT"/>
+          <xsd:enumeration value="INVALID_PROTOCOL"/>
+          <xsd:enumeration value="INVALID_PROJECT_COUNTRY_SITE_DATA"/>
+          <xsd:enumeration value="INVALID_DIA_KEY"/>
+          <xsd:enumeration value="MAPPING_ERROR"/>
+          <xsd:enumeration value="CHECKID_MISMATCH"/>
+          <xsd:enumeration value="PARENT_CHILD_ERROR"/>
+          <xsd:enumeration value="LINK_FAILURE_ERROR"/>
+          <xsd:enumeration value="MISSING_DATA_ERROR"/>
+          <xsd:enumeration value="LOGIN_ERROR"/>
+          <xsd:enumeration value="DOCUMENT_ALREADY_DELETED"/>
+          <xsd:enumeration value="ACCESS_DENIED"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ErrorReason" nillable="true" type="tns:ErrorReason"/>
+      <xsd:element name="Logout">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="token" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="LogoutResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="LogoutResult" type="tns:SecurityResult"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SubmitDocument">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="token" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="dataId" type="xsd:long"/>
+            <xsd:element minOccurs="1" name="method" type="tns:SubmitMethod"/>
+            <xsd:element minOccurs="0" name="phlexDocumentId" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="reason" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="fileExtension" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="documentName" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="attributes" type="tns:ArrayOfAttribute"/>
+            <xsd:element minOccurs="1" name="content" type="xsd:base64Binary"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:simpleType name="SubmitMethod">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="ADD"/>
+          <xsd:enumeration value="UPDATE"/>
+          <xsd:enumeration value="DELETE"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="SubmitMethod" nillable="true" type="tns:SubmitMethod"/>
+      <xsd:complexType name="ArrayOfAttribute">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Attribute" nillable="true" type="tns:Attribute"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ArrayOfAttribute" nillable="true" type="tns:ArrayOfAttribute"/>
+      <xsd:complexType name="Attribute">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="fieldName" nillable="true" type="xsd:string">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/"/>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="fieldType" type="tns:FieldType">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/"/>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="fieldValue" nillable="true" type="xsd:string">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/"/>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Attribute" nillable="true" type="tns:Attribute"/>
+      <xsd:simpleType name="FieldType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Text"/>
+          <xsd:enumeration value="Date"/>
+          <xsd:enumeration value="Number"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="FieldType" nillable="true" type="tns:FieldType"/>
+      <xsd:element name="SubmitDocumentResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="SubmitDocumentResult" type="tns:DocumentResult"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DocumentResult">
+        <xsd:sequence>
+          <xsd:element name="statusCode" type="tns:StatusCode"/>
+          <xsd:element name="errorReason" type="tns:ErrorReason"/>
+          <xsd:element minOccurs="0" name="errorData" nillable="true" type="xsd:string">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/"/>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="phlexDocumentId" type="xsd:long"/>
+          <xsd:element minOccurs="0" name="receiveDate" type="xsd:dateTime"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DocumentResult" nillable="true" type="tns:DocumentResult"/>
+      <xsd:element name="SubmitDocumentMetadata">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="token" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="dataId" type="xsd:long"/>
+            <xsd:element minOccurs="1" name="method" type="tns:SubmitMethod"/>
+            <xsd:element minOccurs="1" name="phlexDocumentId" type="xsd:long"/>
+            <xsd:element minOccurs="1" name="reason" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="documentName" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="attributes" nillable="true" type="tns:ArrayOfAttribute"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SubmitDocumentMetadataResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="SubmitDocumentMetadataResult" type="tns:DocumentResult"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/">
+      <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+      <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+      <xs:element name="byte" nillable="true" type="xs:byte"/>
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+      <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+      <xs:element name="double" nillable="true" type="xs:double"/>
+      <xs:element name="float" nillable="true" type="xs:float"/>
+      <xs:element name="int" nillable="true" type="xs:int"/>
+      <xs:element name="long" nillable="true" type="xs:long"/>
+      <xs:element name="QName" nillable="true" type="xs:QName"/>
+      <xs:element name="short" nillable="true" type="xs:short"/>
+      <xs:element name="string" nillable="true" type="xs:string"/>
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+      <xs:element name="char" nillable="true" type="tns:char"/>
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int"/>
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration"/>
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid"/>
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName"/>
+      <xs:attribute name="Id" type="xs:ID"/>
+      <xs:attribute name="Ref" type="xs:IDREF"/>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="IExternalConnector_LoginUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:LoginUser"/>
+  </wsdl:message>
+  <wsdl:message name="IExternalConnector_LoginUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoginUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IExternalConnector_Logout_InputMessage">
+    <wsdl:part name="parameters" element="tns:Logout"/>
+  </wsdl:message>
+  <wsdl:message name="IExternalConnector_Logout_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LogoutResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IExternalConnector_SubmitDocument_InputMessage">
+    <wsdl:part name="parameters" element="tns:SubmitDocument"/>
+  </wsdl:message>
+  <wsdl:message name="IExternalConnector_SubmitDocument_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SubmitDocumentResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IExternalConnector_SubmitDocumentMetadata_InputMessage">
+    <wsdl:part name="parameters" element="tns:SubmitDocumentMetadata"/>
+  </wsdl:message>
+  <wsdl:message name="IExternalConnector_SubmitDocumentMetadata_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SubmitDocumentMetadataResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="IExternalConnector">
+    <wsdl:operation name="LoginUser">
+      <wsdl:input wsaw:Action="http://www.phlexeview.com/IExternalConnector/LoginUser" message="tns:IExternalConnector_LoginUser_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.phlexeview.com/IExternalConnector/LoginUserResponse" message="tns:IExternalConnector_LoginUser_OutputMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="Logout">
+      <wsdl:input wsaw:Action="http://www.phlexeview.com/IExternalConnector/Logout" message="tns:IExternalConnector_Logout_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.phlexeview.com/IExternalConnector/LogoutResponse" message="tns:IExternalConnector_Logout_OutputMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitDocument">
+      <wsdl:input wsaw:Action="http://www.phlexeview.com/IExternalConnector/SubmitDocument" message="tns:IExternalConnector_SubmitDocument_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.phlexeview.com/IExternalConnector/SubmitDocumentResponse" message="tns:IExternalConnector_SubmitDocument_OutputMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitDocumentMetadata">
+      <wsdl:input wsaw:Action="http://www.phlexeview.com/IExternalConnector/SubmitDocumentMetadata" message="tns:IExternalConnector_SubmitDocumentMetadata_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.phlexeview.com/IExternalConnector/SubmitDocumentMetadataResponse" message="tns:IExternalConnector_SubmitDocumentMetadata_OutputMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IExternalConnector" type="tns:IExternalConnector">
+    <wsp:PolicyReference URI="#BasicHttpBinding_IExternalConnector_policy"/>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="LoginUser">
+      <soap:operation soapAction="http://www.phlexeview.com/IExternalConnector/LoginUser" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Logout">
+      <soap:operation soapAction="http://www.phlexeview.com/IExternalConnector/Logout" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitDocument">
+      <soap:operation soapAction="http://www.phlexeview.com/IExternalConnector/SubmitDocument" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitDocumentMetadata">
+      <soap:operation soapAction="http://www.phlexeview.com/IExternalConnector/SubmitDocumentMetadata" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ExternalConnector">
+    <wsdl:port name="BasicHttpBinding_IExternalConnector" binding="tns:BasicHttpBinding_IExternalConnector">
+      <soap:address location="http://phlex-dev.nse.co.uk/Integration/EI_Quintiles.svc"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,53 @@
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${catalina.base}/logs/Document.log</file>
+    <encoder>
+      <pattern>%d [%thread] %-5level %logger{35} [%M]- %msg %n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+
+  <appender name="TESTRESULTS" class="ch.qos.logback.classic.sift.SiftingAppender">
+      <discriminator>
+          <key>testsuite-name</key>
+          <defaultValue>global</defaultValue>
+      </discriminator>
+      <sift>
+            <appender name="testresults" class="ch.qos.logback.core.FileAppender">
+            <file>${catalina.base}/logs/results_${testsuite-name}.log</file>
+            <append>true</append>
+            <encoder>
+                <pattern>%d [%thread] %-5level %logger{35} [%M]- %msg %n</pattern>
+            </encoder>
+            </appender>
+      </sift>
+  </appender>
+
+
+  <logger name="com.quintiles.biibexport.harness.PhlexViewServiceImpl" additivity="false">
+    <appender-ref ref="FILE" />
+  </logger>
+
+  <logger name="com.quintiles.biibexport.util.LoadDBServletContextListener" additivity="false">
+    <appender-ref ref="FILE" />
+  </logger>
+
+
+  <logger name="testresults" additivity="false">
+    <appender-ref ref="TESTRESULTS" />
+  </logger>
+
+  <logger name="interceptors" additivity="false">
+      <appender-ref ref="FILE" />
+  </logger>
+
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

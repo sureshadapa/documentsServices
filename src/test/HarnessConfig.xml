@@ -1,0 +1,39 @@
+<HarnessConfig>
+    <Configuration>
+        <maxInvalidAttempts>3</maxInvalidAttempts>
+        <timeBetweenRetries>1800</timeBetweenRetries>
+        <sleepTime>30</sleepTime>
+        <sessionTimeout>30</sessionTimeout>
+        <concurrentConnections>2</concurrentConnections>
+    </Configuration>
+    <TestSuite name="TS_1">
+        <TestCase>
+            <Name>Testcase6</Name>
+            <Operation>SubmitDocument</Operation>
+            <Method>ADD</Method>
+            <ErrorResponse>NONE</ErrorResponse>
+            <StatusCode>SUCCESS</StatusCode>
+        </TestCase>
+        <TestCase>
+            <Name>Testcase1</Name>
+            <Operation>SubmitDocument</Operation>
+            <Method>UPDATE</Method>
+            <ErrorResponse>PORTFOLIO_PDF_UNSUPPORTED</ErrorResponse>
+            <StatusCode>DO_NOT_RETRY</StatusCode>
+        </TestCase>
+        <TestCase>
+            <Name>Testcase2</Name>
+            <Operation>SubmitDocumentMetadata</Operation>
+            <Method>ADD</Method>
+            <ErrorResponse>NONE</ErrorResponse>
+            <StatusCode>SUCCESS</StatusCode>
+        </TestCase>
+        <TestCase>
+            <Name>Testcase3</Name>
+            <Operation>SubmitDocumentMetadata</Operation>
+            <Method>DELETE</Method>
+            <ErrorResponse>UNSUPPORTED_FORMAT</ErrorResponse>
+            <StatusCode>DO_NOT_RETRY</StatusCode>
+        </TestCase>
+    </TestSuite>
+</HarnessConfig>
